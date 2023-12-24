@@ -1,8 +1,18 @@
 ## AgriTechVision repo pour les caméras
 
-# Fait:
+## Composants:
+- ESP32 Cam
+- Caméra
+- Photorésistances
+- Resistance
+
+## Environnement de Développement:
+- JetBrains CLion
+- PlatformIO
+  
+### Fait:
 - Connexion au Wifi
 - Mesure de la lumière ambiente
 
-# To Do: 
+### To Do: 
 - Connexion de caméra
