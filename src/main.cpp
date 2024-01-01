@@ -1,10 +1,3 @@
-//
-// Created by Rita on 12/21/2023.
-//
-#include <WiFi.h>
-#define LIGHT_SENSOR_PIN   35
-// #define PORT_LED_FLASH      4
-
 /*
  * unsigned : type modifier used with integer types to indicate that the variable will only hold non-negative values (zero or positive).
  * signed : default, variable that can hold both positive and negative values.
@@ -12,40 +5,21 @@
  * * :  variables that store memory addresses as their values (dynamic memory allocation). It is possible to change value of a variable through the pointer. Pointers can be powerful but require careful handling to prevent issues like memory leaks, segmentation faults, or accessing invalid memory addresses.
  */
 
-const char* SSID_L = "Numericable-c463";
-const char* MOT_DE_PASSE_L = "cuqpyhr2tlyg";
-wl_status_t StatutConnexion_L;
+#include "esp_camera.h"
+#include "Arduino.h"
+#include "soc/soc.h"
+#include "soc/rtc_cntl_reg.h"
+#include "WifiController.h"
+#include "CameraServerController.h"
+#include "CameraController.h"
 
-const int TIMEOUT_WIFI = 10000;
+const char* ssid = "Numericable-c463";
+const char* password = "cuqpyhr2tlyg";
+const int time_interval = 1000;
 
-WiFiMode_t  FCT_WiFI_Init (const char* _ssid, const char* _password){
-    unsigned long time_start = millis();
-    unsigned long time_boucle;
-
-    const String SSID_AP = "ESP_AP";
-
-    WiFi.disconnect();
-    WiFi.mode(WIFI_STA);
-    WiFi.begin(SSID_L, MOT_DE_PASSE_L);
-
-    while(WiFi.status() != WL_CONNECTED) {
-        delay(500);
-        Serial.print(".");
-        time_boucle = millis();
-        if(time_boucle > time_start + TIMEOUT_WIFI) {
-            Serial.println("Wifi connection failed !");
-            Serial.println();
-            WiFi.disconnect();
-            Serial.println("Open Wifi access point : ");
-            WiFi.softAP(SSID_AP);
-            return WIFI_AP;
-        }
-    }
-
-    Serial.println(("Wifi connection successfull."));
-    return WIFI_STA;
-}
-
+WifiController wifiController;
+CameraServerController cameraServerController;
+CameraController cameraController;
 
 void mesureLight(int analogVal) {
     Serial.print("Analog Light Value = ");
@@ -64,53 +38,24 @@ void mesureLight(int analogVal) {
     }
 }
 
-void setup()
-{
+void setup() {
+    WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0); //disable brownout detector
+
     Serial.begin(115200);
-    // pinMode(PORT_LED_FLASH, OUTPUT);
+    Serial.setDebugOutput(false);
 
-    FCT_WiFI_Init(SSID_L, MOT_DE_PASSE_L);
-     StatutConnexion_L = WiFi.status();
-       while ((StatutConnexion_L != WL_NO_SSID_AVAIL)&&(StatutConnexion_L != WL_CONNECTED)&&(StatutConnexion_L != WL_CONNECT_FAILED))
-       {
-           StatutConnexion_L = WiFi.status();
-           // digitalWrite(PORT_LED_FLASH, HIGH);
-           // delay(100);
-           // digitalWrite(PORT_LED_FLASH, LOW);
-           // delay(500);
-       }
+    wifiController.checkNetworks();
 
-       if (StatutConnexion_L == WL_CONNECTED)
-       {
-           Serial.println("Password OK");
-           Serial.println("Connection OK");
-           Serial.println("IP address: ");
-           Serial.print(WiFi.softAPIP());
-       }
-       else if (StatutConnexion_L == WL_NO_SSID_AVAIL)
-       {
-           Serial.println("SSID not found");
-       }
-       else if (StatutConnexion_L == WL_CONNECT_FAILED)
-       {
-           Serial.println("Password KO");
-       }
-       else
-       {
-           Serial.println("Other error");
-       }
+    // camera init
+    cameraController.cameraConfig();
 
-    Serial.println(' ');
+    // Wi-Fi connection
+    wifiController.WiFiConnect(ssid, password, time_interval);
+
+    // Start streaming web server
+    cameraServerController.startCameraServer();
 }
 
-void loop()
-{
-    int analogValue = analogRead(LIGHT_SENSOR_PIN); // from 0 (no light) to 1023 (maximal light)
-
-    delay(10);
-    mesureLight(analogValue);
-    // digitalWrite(PORT_LED_FLASH, HIGH);
-    // delay(1000);
-    // digitalWrite(PORT_LED_FLASH, LOW);
-    delay(1000);
+void loop() {
+    delay(1);
 }
