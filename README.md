@@ -2,7 +2,7 @@
 
 ## Composants:
 - ESP32 Cam
-- Caméra
+- Caméra OV2640
 - Photorésistances
 - Resistance
 
@@ -13,6 +13,8 @@
 ### Fait:
 - Connexion au Wifi
 - Mesure de la lumière ambiente
+- Connexion de caméra
+- Stream image dans le navigateur en local
 
 ### To Do: 
-- Connexion de caméra
+- 
