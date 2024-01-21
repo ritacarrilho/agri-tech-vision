@@ -98,6 +98,6 @@ void WifiController::checkNetworks (){
     }
     Serial.println("");
 
-    // Delete the scan result to free memory for code below.
+    // Delete the scan result to free memory.
     WiFi.scanDelete();
 }

@@ -59,3 +59,9 @@ void setup() {
 void loop() {
     delay(1);
 }
+
+/*
+ * make local server / API
+ * send data to server
+ * 
+ */
