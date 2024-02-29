@@ -1,0 +1,8 @@
+//
+// Created by Rita Carrilho on 29/02/2024.
+//
+
+#ifndef AGRI_TECH_VISION_SERVOMOTOR_H
+#define AGRI_TECH_VISION_SERVOMOTOR_H
+
+#endif //AGRI_TECH_VISION_SERVOMOTOR_H
