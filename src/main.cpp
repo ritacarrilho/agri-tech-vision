@@ -13,9 +13,13 @@
 #include "CameraServerController.h"
 #include "CameraController.h"
 
-const char* ssid = "Numericable-c463";
-const char* password = "cuqpyhr2tlyg";
+const int ledPin = 4;
+
+// const char* ssid = "Numericable-c463";
+// const char* password = "cuqpyhr2tlyg";
 const int time_interval = 1000;
+const char* ssid = "";
+const char* password = "";
 
 WifiController wifiController;
 CameraServerController cameraServerController;
@@ -54,14 +58,25 @@ void setup() {
 
     // Start streaming web server
     cameraServerController.startCameraServer();
+
+    // pinMode(ledPin, OUTPUT);
 }
 
 void loop() {
-    delay(1);
+    // delay(1);
+
+    // Turn on the LED
+    digitalWrite(ledPin, HIGH);
+    Serial.println("LED on");
+    delay(1000);  // Wait for 1 second
+
+    // Turn off the LED
+    digitalWrite(ledPin, LOW);
+    Serial.println("LED off");
+    delay(1000);  // Wait for 1 second
 }
 
 /*
  * make local server / API
  * send data to server
- * 
  */
