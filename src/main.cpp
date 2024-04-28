@@ -15,11 +15,12 @@
 
 const int ledPin = 4;
 
-// const char* ssid = "Numericable-c463";
-// const char* password = "cuqpyhr2tlyg";
+const char* ssid = "Numericable-c463";
+const char* password = "cuqpyhr2tlyg";
+
 const int time_interval = 1000;
-const char* ssid = "";
-const char* password = "";
+// const char* ssid = "";
+// const char* password = "";
 
 WifiController wifiController;
 CameraServerController cameraServerController;
@@ -50,13 +51,13 @@ void setup() {
 
     wifiController.checkNetworks();
 
-    // camera init
+    // Initialize camera
     cameraController.cameraConfig();
 
-    // Wi-Fi connection
+    // Connect to Wi-Fi
     wifiController.WiFiConnect(ssid, password, time_interval);
 
-    // Start streaming web server
+    // Start the camera server to stream video
     cameraServerController.startCameraServer();
 
     // pinMode(ledPin, OUTPUT);
@@ -65,7 +66,7 @@ void setup() {
 void loop() {
     // delay(1);
 
-    // Turn on the LED
+    /* Turn on the LED
     digitalWrite(ledPin, HIGH);
     Serial.println("LED on");
     delay(1000);  // Wait for 1 second
@@ -74,9 +75,10 @@ void loop() {
     digitalWrite(ledPin, LOW);
     Serial.println("LED off");
     delay(1000);  // Wait for 1 second
+     */
 }
 
 /*
  * make local server / API
- * send data to server
+ * send data to server / api
  */
