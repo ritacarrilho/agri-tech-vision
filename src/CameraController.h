@@ -19,7 +19,8 @@ class CameraController {
         gainceiling_t current_cam_gain;
     public:
         CameraController();
-        void cameraConfig();
+        void cameraConfig(const int ledPin);
+        void blinkLED(const int ledPin, int onTime, int offTime, int repetitions);
         void setCameraGain(int gain);
         void setCameraQuality(int quality);
         void setCameraFramesize(int size);

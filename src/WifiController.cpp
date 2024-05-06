@@ -29,11 +29,6 @@ WiFiMode_t WifiController::WiFiConnect (const char* _ssid, const char* _password
     }
 
     Serial.println(("Wifi connection successfull."));
-    Serial.print("Camera Stream Ready! Go to: http://");
-    Serial.print(WiFi.localIP());
-
-    // Start streaming web server
-    // startCameraServer();
 
     return WIFI_STA;
 }

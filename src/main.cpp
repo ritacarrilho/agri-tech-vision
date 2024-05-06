@@ -13,14 +13,17 @@
 #include "CameraServerController.h"
 #include "CameraController.h"
 
-const int ledPin = 4;
+/*
+ * LED 4 : front white LED
+ * LED 33 : back red LED
+ */
+const int ledPin = 33;
+const int whiteLed = 4;
 
 const char* ssid = "Numericable-c463";
 const char* password = "cuqpyhr2tlyg";
 
 const int time_interval = 1000;
-// const char* ssid = "";
-// const char* password = "";
 
 WifiController wifiController;
 CameraServerController cameraServerController;
@@ -50,32 +53,12 @@ void setup() {
     Serial.setDebugOutput(false);
 
     wifiController.checkNetworks();
-
-    // Initialize camera
-    cameraController.cameraConfig();
-
-    // Connect to Wi-Fi
-    wifiController.WiFiConnect(ssid, password, time_interval);
-
-    // Start the camera server to stream video
-    cameraServerController.startCameraServer();
-
-    // pinMode(ledPin, OUTPUT);
+    wifiController.WiFiConnect(ssid, password, time_interval); // Connect to Wi-Fi
+    cameraController.cameraConfig(ledPin); // Initialize camera
+    cameraServerController.startCameraServer(); // Start the camera server to stream video
 }
 
 void loop() {
-    // delay(1);
-
-    /* Turn on the LED
-    digitalWrite(ledPin, HIGH);
-    Serial.println("LED on");
-    delay(1000);  // Wait for 1 second
-
-    // Turn off the LED
-    digitalWrite(ledPin, LOW);
-    Serial.println("LED off");
-    delay(1000);  // Wait for 1 second
-     */
 }
 
 /*

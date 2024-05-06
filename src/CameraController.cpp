@@ -7,13 +7,21 @@
 #include "Arduino.h"
 #include <camera_pins.h>
 
-
 sensor_t *camera_sensor2 = NULL;
 extern void ComboLog(String message);
 
 CameraController::CameraController() {}
 
-void CameraController::cameraConfig() {
+void CameraController::blinkLED(const int ledPin, int onTime, int offTime, int repetitions) {
+    for (int i = 0; i < repetitions; i++) {
+        digitalWrite(ledPin, HIGH); // Turn on the LED
+        delay(onTime); // Wait for the specified onTime
+        digitalWrite(ledPin, LOW); // Turn off the LED
+        delay(offTime); // Wait for the specified offTime
+    }
+}
+
+void CameraController::cameraConfig(const int ledPin) {
     camera_config_t config;
     config.ledc_channel = LEDC_CHANNEL_0;
     config.ledc_timer = LEDC_TIMER_0;
@@ -43,6 +51,8 @@ void CameraController::cameraConfig() {
     current_cam_quality = 20; //10-63 lower number means higher quality
     current_cam_gain = (gainceiling_t)0;
 
+    pinMode(ledPin, OUTPUT);
+
     if(psramFound()){
         config.frame_size = FRAMESIZE_UXGA;
         config.jpeg_quality = 10;
@@ -53,13 +63,15 @@ void CameraController::cameraConfig() {
         config.fb_count = 1;
     }
 
-    // Camera init
-    esp_err_t err = esp_camera_init(&config);
+    esp_err_t err = esp_camera_init(&config); // Camera init
 
     if (err != ESP_OK) {
+        digitalWrite(ledPin, LOW);
         Serial.printf("Camera init failed with error 0x%x", err);
         return;
     }
+
+    blinkLED(ledPin, 500, 500, 6);
 }
 
 void CameraController::setCameraFramesize(int size)

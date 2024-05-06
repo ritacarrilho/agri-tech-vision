@@ -9,6 +9,7 @@
 #include "img_converters.h"
 #include "Arduino.h"
 #include "soc/soc.h"
+#include <WiFi.h>
 
 const char* CameraServerController::_STREAM_CONTENT_TYPE = "multipart/x-mixed-replace; boundary=frameboundary";
 const char* CameraServerController::_STREAM_BOUNDARY = "\r\n--frameboundary\r\n";
@@ -99,13 +100,19 @@ void CameraServerController::startCameraServer() {
     };
 
     if (httpd_start(&stream_httpd, &config) != ESP_OK) {
+        Serial.println("");
         Serial.println("Error starting server!");
         return;
     }
 
     if (httpd_register_uri_handler(stream_httpd, &index_uri) != ESP_OK) {
+        Serial.println("");
         Serial.println("Error setting URI handler!");
     } else {
-        Serial.println("Camera stream server started successfully!");
+        char url[50];
+        snprintf(url, sizeof(url), "http://%s:%d%s", WiFi.localIP().toString().c_str(), config.server_port, index_uri.uri);
+        Serial.println("");
+        Serial.print("Camera stream server started successfully! URL: ");
+        Serial.println(url);
     }
 }
