@@ -8,29 +8,36 @@
 unsigned long time_start = millis();
 unsigned long time_loop = millis();
 
-WiFiMode_t WifiController::WiFiConnect (const char* _ssid, const char* _password, const int timeout){
-    const String SSID_AP = "ESP_AP";
+wl_status_t WifiController::WiFiConnect(const char* _ssid, const char* _password, const int timeout) {
+    IPAddress staticIP(192, 168, 0, 15);
+    IPAddress gateway(192, 168, 0, 15);
+    IPAddress subnet(255, 255, 255, 0);
+    // IPAddress primaryDNS(8, 8, 8, 8);     // Optional
+    // IPAddress secondaryDNS(8, 8, 4, 4);   // Optional
 
-    WiFi.disconnect();
+    WiFi.disconnect(true);
+    if (!WiFi.config(staticIP, gateway, subnet)) {
+        Serial.println("STA Failed to configure");
+        return WL_DISCONNECTED;
+    }
+
     WiFi.mode(WIFI_STA);
     WiFi.begin(_ssid, _password);
 
-    while(WiFi.status() != WL_CONNECTED) {
+    while (WiFi.status() != WL_CONNECTED && millis() - time_start < timeout) {
         delay(500);
         Serial.print(".");
-        if(time_loop > time_start + timeout) {
-            Serial.println("Wifi connection failed !");
-            Serial.println();
-            WiFi.disconnect();
-            Serial.println("Open Wifi access point : ");
-            WiFi.softAP(SSID_AP);
-            return WIFI_AP;
-        }
     }
 
-    Serial.println(("Wifi connection successfull."));
-
-    return WIFI_STA;
+    if (WiFi.status() != WL_CONNECTED) {
+        Serial.println("WiFi connection failed!");
+        return WL_CONNECT_FAILED;
+    } else {
+        Serial.println("WiFi connection successful.");
+        Serial.print("Camera Stream Ready! Go to: http://");
+        Serial.println(WiFi.localIP());
+        return WL_CONNECTED;
+    }
 }
 
 void WifiController::checkNetworks (){

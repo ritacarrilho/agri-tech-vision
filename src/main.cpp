@@ -12,6 +12,7 @@
 #include "WifiController.h"
 #include "CameraServerController.h"
 #include "CameraController.h"
+#include <WiFi.h>
 
 /*
  * LED 4 : front white LED
@@ -20,8 +21,11 @@
 const int ledPin = 33;
 const int whiteLed = 4;
 
-const char* ssid = "Numericable-c463";
-const char* password = "cuqpyhr2tlyg";
+// const char* ssid = "Numericable-c463";
+// const char* password = "cuqpyhr2tlyg";
+
+const char* ssid = "iPhone de Rita";
+const char* password = "Miaumiau";
 
 const int time_interval = 1000;
 
@@ -53,7 +57,12 @@ void setup() {
     Serial.setDebugOutput(false);
 
     wifiController.checkNetworks();
-    wifiController.WiFiConnect(ssid, password, time_interval); // Connect to Wi-Fi
+    wl_status_t connectionStatus = wifiController.WiFiConnect(ssid, password, 30000);// Connect to Wi-Fi
+
+    if (connectionStatus != WL_CONNECTED) {
+        Serial.println("Failed to connect to the WiFi network.");
+    }
+
     cameraController.cameraConfig(ledPin); // Initialize camera
     cameraServerController.startCameraServer(); // Start the camera server to stream video
 }

@@ -9,7 +9,7 @@
 
 class WifiController {
     public:
-        WiFiMode_t WiFiConnect(const char* _ssid, const char* _password, const int timeout);
+    wl_status_t WiFiConnect(const char* _ssid, const char* _password, const int timeout);
         void checkNetworks();
     private:
 };
