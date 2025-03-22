@@ -12,8 +12,9 @@ wl_status_t WifiController::WiFiConnect(const char* _ssid, const char* _password
     IPAddress staticIP(192, 168, 0, 15);
     IPAddress gateway(192, 168, 0, 15);
     IPAddress subnet(255, 255, 255, 0);
-    // IPAddress primaryDNS(8, 8, 8, 8);     // Optional
-    // IPAddress secondaryDNS(8, 8, 4, 4);   // Optional
+    // IPAddress staticIP(10, 3, 141, 15);
+    // IPAddress gateway(10, 3, 141, 165);
+    // IPAddress subnet(255, 255, 255, 0);
 
     WiFi.disconnect(true);
     if (!WiFi.config(staticIP, gateway, subnet)) {
@@ -34,8 +35,6 @@ wl_status_t WifiController::WiFiConnect(const char* _ssid, const char* _password
         return WL_CONNECT_FAILED;
     } else {
         Serial.println("WiFi connection successful.");
-        Serial.print("Camera Stream Ready! Go to: http://");
-        Serial.println(WiFi.localIP());
         return WL_CONNECTED;
     }
 }
@@ -43,7 +42,6 @@ wl_status_t WifiController::WiFiConnect(const char* _ssid, const char* _password
 void WifiController::checkNetworks (){
     Serial.println("Scan start");
 
-    // WiFi.scanNetworks will return the number of networks found.
     int networks = WiFi.scanNetworks();
     Serial.println("Scan done");
     if (networks == 0) {
