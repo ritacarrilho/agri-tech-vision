@@ -2,15 +2,19 @@
 #include "soc/soc.h"
 #include "soc/rtc_cntl_reg.h"
 #include "WifiController.h"
-#include "ServerController.h"
+#include "CameraServerController.h"
 #include "CameraController.h"
 #include <WiFi.h>
 #include "ServoController.h"
+#include "ServoServerController.h"
 
 /*
  * LED 4 : front white LED
  * LED 33 : back red LED
  */
+
+#define LIGHT_SENSOR_PIN 34
+
 const int ledPin = 33;
 // const int filterServoPin = 14;
 const int tiltServoPin = 13;
@@ -22,14 +26,15 @@ const char* password = "cuqpyhr2tlyg";
 // const char* password = "ChangeMe";
 
 WifiController wifiController;
-ServerController serverController;
+CameraServerController cameraServerController;
+ServoServerController servoServerController;
 CameraController cameraController;
 
-// Create the tilt servo controller as a global instance so that it can be used by the server handler.
+// Global servo controller instance for tilt (used by the servo server)
 ServoController tiltServoController(tiltServoPin, 90);
 
-void mesureLight(int analogVal) {
-    Serial.print("Analog Light Value = ");
+void measureLight() {
+    /* Serial.print("Analog Light Value = ");
     Serial.print(analogVal);
 
     if (analogVal < 40) {
@@ -42,7 +47,7 @@ void mesureLight(int analogVal) {
         Serial.println(" => Bright");
     } else {
         Serial.println(" => Very bright");
-    }
+    } */
 }
 
 void setup() {
@@ -50,6 +55,8 @@ void setup() {
 
     Serial.begin(115200);
     Serial.setDebugOutput(false);
+    analogSetAttenuation(ADC_11db);
+    pinMode(LIGHT_SENSOR_PIN, INPUT);
 
     wifiController.checkNetworks();
     wl_status_t connectionStatus = wifiController.WiFiConnect(ssid, password, 30000); // Connect to Wi-Fi
@@ -59,14 +66,25 @@ void setup() {
     }
 
     cameraController.cameraConfig(ledPin);
-    // Start the HTTP server (this registers both /stream and /moveServo endpoints)
-    serverController.startServer();
+    // Start the streaming and servo command servers.
+    cameraServerController.startServer();
+    servoServerController.startServer();
 
-    // Attach the tilt servo
+    // Attach the tilt servo.
     tiltServoController.attach();
 }
 
 void loop() {
+    // Read the raw ADC value (range typically 0 - 4095).
+    int lightValue = analogRead(LIGHT_SENSOR_PIN);
+
+    // Print the value to the Serial Monitor.
+    Serial.print("Light sensor reading: ");
+    Serial.println(lightValue);
+
+    // Adjust delay as needed (e.g., measure every second).
+    delay(1000);
+
     /*// Rotate continuously clockwise (full speed)
     tiltServo.write(0);
     filterServo.write(90);

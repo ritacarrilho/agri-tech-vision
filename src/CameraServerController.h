@@ -3,16 +3,14 @@
 //
 #pragma once
 
-#ifndef SERVER_CONTROLLER_H
-#define SERVER_CONTROLLER_H
+#ifndef CAMERA_SERVER_CONTROLLER_H
+#define CAMERA_SERVER_CONTROLLER_H
 
 #include "esp_http_server.h"
 
-class ServerController {
+class CameraServerController {
 public:
-    ServerController();
-
-    // Starts the HTTP server, registers the /stream and /moveServo endpoints.
+    CameraServerController();
     void startServer();
 
     // HTTP handler for streaming camera frames.
