@@ -7,16 +7,15 @@
 #include <WiFi.h>
 #include "ServoController.h"
 #include "ServoServerController.h"
+#include "IrFilterController.h"
 
 /*
  * LED 4 : front white LED
  * LED 33 : back red LED
  */
 
-#define LIGHT_SENSOR_PIN 34
-
 const int ledPin = 33;
-// const int filterServoPin = 14;
+const int filterServoPin = 14;
 const int tiltServoPin = 13;
 
 const char* ssid = "Numericable-c463";
@@ -29,79 +28,47 @@ WifiController wifiController;
 CameraServerController cameraServerController;
 ServoServerController servoServerController;
 CameraController cameraController;
-
-// Global servo controller instance for tilt (used by the servo server)
 ServoController tiltServoController(tiltServoPin, 90);
+IrFilterController filterController(filterServoPin, GPIO_NUM_32);
 
-void measureLight() {
-    /* Serial.print("Analog Light Value = ");
-    Serial.print(analogVal);
-
-    if (analogVal < 40) {
-        Serial.println(" => Dark");
-    } else if (analogVal < 800) {
-        Serial.println(" => Dim");
-    } else if (analogVal < 2000) {
-        Serial.println(" => Light");
-    } else if (analogVal < 3200) {
-        Serial.println(" => Bright");
-    } else {
-        Serial.println(" => Very bright");
-    } */
-}
 
 void setup() {
-    WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0); // Disable brownout detector
+    // Disable brownout detector
+    WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0); 
 
     Serial.begin(115200);
     Serial.setDebugOutput(false);
-    analogSetAttenuation(ADC_11db);
-    pinMode(LIGHT_SENSOR_PIN, INPUT);
+    
+    // analogSetAttenuation(ADC_11db);
+    // pinMode(GPIO_NUM_32, INPUT);
 
-    wifiController.checkNetworks();
-    wl_status_t connectionStatus = wifiController.WiFiConnect(ssid, password, 30000); // Connect to Wi-Fi
+    // Connect to Wi-Fi
+    // wifiController.checkNetworks();
+    // wl_status_t connectionStatus = wifiController.WiFiConnect(ssid, password, 30000); 
 
-    if (connectionStatus != WL_CONNECTED) {
-        Serial.println("Failed to connect to the WiFi network.");
-    }
+    // if (connectionStatus != WL_CONNECTED) {
+    //     Serial.println("Failed to connect to the WiFi network.");
+    // }
 
-    cameraController.cameraConfig(ledPin);
-    // Start the streaming and servo command servers.
-    cameraServerController.startServer();
-    servoServerController.startServer();
+    // // Configure pins for camara
+    // cameraController.cameraConfig(ledPin);
+    // // Start the streaming and servo servers.
+    // cameraServerController.startServer();
+    // servoServerController.startServer();
 
     // Attach the tilt servo.
     tiltServoController.attach();
+    filterController.attachIrServo();
 }
 
 void loop() {
-    // Read the raw ADC value (range typically 0 - 4095).
-    int lightValue = analogRead(LIGHT_SENSOR_PIN);
+    // static uint8_t state = LOW;
+    // int lightValue = analogRead(GPIO_NUM_32);
 
-    // Print the value to the Serial Monitor.
-    Serial.print("Light sensor reading: ");
-    Serial.println(lightValue);
+    // Serial.print("Light sensor reading: ");
+    // Serial.println(lightValue);
+    // measureLight();
 
-    // Adjust delay as needed (e.g., measure every second).
+    filterController.measureLight();
     delay(1000);
-
-    /*// Rotate continuously clockwise (full speed)
-    tiltServo.write(0);
-    filterServo.write(90);
-    delay(2000); // Rotate for 2 seconds
-
-    // Stop the servo (assuming 90 is the neutral stop for your servo)
-    tiltServo.write(90);
-    filterServo.write(0);
-    delay(1000); // Stop for 1 second
-
-    // Rotate continuously counterclockwise (full speed)
-    tiltServo.write(180);
-    filterServo.write(90);
-    delay(2000); // Rotate for 2 seconds
-
-    // Stop the servo again
-    tiltServo.write(90);
-    filterServo.write(1800);
-    delay(1000); // Stop for 1 second */
 }
