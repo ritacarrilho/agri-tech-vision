@@ -15,18 +15,6 @@ int IrFilterController::measureLight() {
     int lightValue = analogRead(_photoPin);
     Serial.print("Analog Light Value = ");
     Serial.print(lightValue);
-
-    // if (lightValue < 40) {
-    //     Serial.println(" => Dark");
-    // } else if (lightValue < 800) {
-    //     Serial.println(" => Dim");
-    // } else if (lightValue < 2000) {
-    //     Serial.println(" => Regular");
-    // } else if (lightValue < 3200) {
-    //     Serial.println(" => Bright");
-    // } else {
-    //     Serial.println(" => Very bright");
-    // } 
     return lightValue;
 } 
 
@@ -43,14 +31,14 @@ void IrFilterController::applyFIlter() {
     int lightValue = analogRead(_photoPin);
 
     if (lightValue < 40) {
-        Serial.println(" => Dark \n");
+        Serial.println(" => Dark");
     } else if (lightValue < 800) {
-        Serial.println(" => Dim \n");
+        Serial.println(" => Dim");
     } else if (lightValue < 2000) {
-        Serial.println(" => Regular \n");
+        Serial.println(" => Regular");
     } else if (lightValue < 3200) {
-        Serial.println(" => Bright \n");
+        Serial.println(" => Bright");
     } else {
-        Serial.println(" => Very bright \n");
+        Serial.println(" => Very bright");
     } 
 }

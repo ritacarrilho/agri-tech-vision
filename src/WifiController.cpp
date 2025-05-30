@@ -9,9 +9,12 @@ unsigned long time_start = millis();
 unsigned long time_loop = millis();
 
 wl_status_t WifiController::WiFiConnect(const char* _ssid, const char* _password, const int timeout) {
-    IPAddress staticIP(192, 168, 0, 15);
-    IPAddress gateway(192, 168, 0, 15);
+    IPAddress staticIP(192, 168, 1, 94);
+    IPAddress gateway(192, 168, 1, 94);
     IPAddress subnet(255, 255, 255, 0);
+    // IPAddress staticIP(192, 168, 0, 15);
+    // IPAddress gateway(192, 168, 0, 15);
+    // IPAddress subnet(255, 255, 255, 0);
     // IPAddress staticIP(10, 3, 141, 15);
     // IPAddress gateway(10, 3, 141, 165);
     // IPAddress subnet(255, 255, 255, 0);
@@ -51,7 +54,6 @@ void WifiController::checkNetworks (){
         Serial.println(" networks found");
         Serial.println("Nr | SSID                             | RSSI | CH | Encryption");
         for (int i = 0; i < networks; ++i) {
-            // Print SSID and RSSI for each network found
             Serial.printf("%2d",i + 1);
             Serial.print(" | ");
             Serial.printf("%-32.32s", WiFi.SSID(i).c_str());
@@ -97,7 +99,5 @@ void WifiController::checkNetworks (){
         }
     }
     Serial.println("");
-
-    // Delete the scan result to free memory.
     WiFi.scanDelete();
 }

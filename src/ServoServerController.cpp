@@ -8,18 +8,17 @@
 #include "soc/soc.h"
 #include "ServoController.h"
 
-// Declare the external tilt servo controller
 extern ServoController tiltServoController;
 
 httpd_handle_t servo_httpd = NULL;
 
+ServoServerController::ServoServerController() {}
+
 esp_err_t ServoServerController::handleMoveServo(httpd_req_t *req) {
-    // Allow cross-origin requests.
     httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
 
     char query[50];
     if (httpd_req_get_url_query_str(req, query, sizeof(query)) == ESP_OK) {
-        // Check for absolute move.
         char panStr[10];
         if (httpd_query_key_value(query, "pan", panStr, sizeof(panStr)) == ESP_OK) {
             int pan = atoi(panStr);
@@ -29,7 +28,7 @@ esp_err_t ServoServerController::handleMoveServo(httpd_req_t *req) {
             httpd_resp_send(req, response, HTTPD_RESP_USE_STRLEN);
             return ESP_OK;
         }
-        // Otherwise, check for relative move.
+
         char dir[10];
         char deltaStr[10];
         if (httpd_query_key_value(query, "dir", dir, sizeof(dir)) == ESP_OK &&
@@ -58,12 +57,10 @@ esp_err_t ServoServerController::handleMoveServo(httpd_req_t *req) {
     return ESP_FAIL;
 }
 
-ServoServerController::ServoServerController() {}
-
 void ServoServerController::startServer() {
     httpd_config_t config = HTTPD_DEFAULT_CONFIG();
     config.server_port = 81;
-    config.ctrl_port = 32769;     // Unique control port to avoid conflicts
+    config.ctrl_port = 32769;
 
     if (httpd_start(&servo_httpd, &config) != ESP_OK) {
         Serial.println("Error starting servo server!");
