@@ -12,12 +12,12 @@ extern void ComboLog(String message);
 
 CameraController::CameraController() {}
 
-void CameraController::blinkLED(const int ledPin, int onTime, int offTime, int repetitions) {
+void CameraController::linkLED(const int ledPin, int onTime, int offTime, int repetitions) {
     for (int i = 0; i < repetitions; i++) {
-        digitalWrite(ledPin, HIGH); // Turn on the LED
-        delay(onTime); // Wait for the specified onTime
-        digitalWrite(ledPin, LOW); // Turn off the LED
-        delay(offTime); // Wait for the specified offTime
+        digitalWrite(ledPin, HIGH);
+        delay(onTime);
+        digitalWrite(ledPin, LOW);
+        delay(offTime);
     }
 }
 
@@ -48,7 +48,7 @@ void CameraController::cameraConfig(const int ledPin) {
     config.jpeg_quality = current_cam_quality;
 
     current_cam_framesize = FRAMESIZE_HVGA;
-    current_cam_quality = 20; //10-63 lower number means higher quality
+    current_cam_quality = 20;
     current_cam_gain = (gainceiling_t)0;
 
     pinMode(ledPin, OUTPUT);
@@ -71,7 +71,7 @@ void CameraController::cameraConfig(const int ledPin) {
         return;
     }
 
-    blinkLED(ledPin, 500, 500, 6);
+    linkLED(ledPin, 500, 500, 6);
 }
 
 void CameraController::setCameraFramesize(int size)

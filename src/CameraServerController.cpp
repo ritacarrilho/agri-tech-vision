@@ -38,8 +38,6 @@ esp_err_t CameraServerController::handleStreamRequest(httpd_req_t *req) {
             Serial.println("Camera capture failed");
             return ESP_FAIL;
         }
-
-        // Convert frame to JPEG if needed.
         if (fb->format != PIXFORMAT_JPEG) {
             bool jpeg_converted = frame2jpg(fb, 80, &_jpg_buf, &_jpg_buf_len);
             esp_camera_fb_return(fb);
@@ -87,7 +85,7 @@ esp_err_t CameraServerController::handleStreamRequest(httpd_req_t *req) {
 
 void CameraServerController::startServer() {
     httpd_config_t config = HTTPD_DEFAULT_CONFIG();
-    config.server_port = 80;  // Stream server runs on port 80
+    config.server_port = 80;
 
     httpd_uri_t index_uri = {
             .uri       = "/stream",

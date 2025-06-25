@@ -10,16 +10,9 @@
 
 class ServoController {
 public:
-    // Constructor: pass the servo pin and optional initial angle (default 90°)
-    ServoController(int servoPin, int initialAngle = 90);
-
-    // Attach the servo to the specified pin and set it to the initial angle
+    ServoController(int servoPin, int initialAngle = 0);
     void attach();
-
-    // Move the servo to a specified angle (constrained between 0 and 180)
     void moveTo(int angle);
-
-    // Retrieve the current angle
     int getAngle() const;
 
 private:

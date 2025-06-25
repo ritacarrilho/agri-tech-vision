@@ -13,12 +13,6 @@
 #include "ServoServerController.h"
 #include "IrFilterController.h"
 
-
-/* TODO:
- *  make IR filter servo movement
- *  Define light values (max and min)
-*/
-
 const int ledPin = 33;
 const int filterServoPin = 14;
 const int tiltServoPin = 13;

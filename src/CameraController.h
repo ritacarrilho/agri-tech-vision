@@ -20,7 +20,7 @@ class CameraController {
     public:
         CameraController();
         void cameraConfig(const int ledPin);
-        void blinkLED(const int ledPin, int onTime, int offTime, int repetitions);
+        void linkLED(const int ledPin, int onTime, int offTime, int repetitions);
         void setCameraGain(int gain);
         void setCameraQuality(int quality);
         void setCameraFramesize(int size);

@@ -9,8 +9,6 @@ IrFilterController::IrFilterController(int servoPin, int photoPin)
 {
 }
 
-// getters and setters
-
 int IrFilterController::measureLight() {
     int lightValue = analogRead(_photoPin);
     Serial.print("Analog Light Value = ");

@@ -11,8 +11,6 @@ class ServoServerController {
 public:
     ServoServerController();
     void startServer();
-
-    // HTTP handler for servo movement commands.
     static esp_err_t handleMoveServo(httpd_req_t *req);
 };
 

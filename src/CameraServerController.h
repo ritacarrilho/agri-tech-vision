@@ -13,7 +13,6 @@ public:
     CameraServerController();
     void startServer();
 
-    // HTTP handler for streaming camera frames.
     static esp_err_t handleStreamRequest(httpd_req_t *req);
 
 private:
